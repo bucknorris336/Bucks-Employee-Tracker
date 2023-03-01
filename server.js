@@ -91,7 +91,7 @@ function loadMainPrompts() {
         viewEmployees();
         break;
       case "VIEW_EMPLOYEES_BY_DEPARTMENT":
-        //viewEmployeesByDepartment();
+        viewEmployeesByDepartment();
         break;
       case "VIEW_EMPLOYEES_BY_MANAGER":
         viewEmployeesByManager();
@@ -109,7 +109,7 @@ function loadMainPrompts() {
         //  updateEmployeeManager();
         break;
       case "VIEW_DEPARTMENTS":
-        //  viewDepartments();
+        viewDepartments();
         break;
       case "ADD_DEPARTMENT":
         // addDepartment();
@@ -134,6 +134,17 @@ function loadMainPrompts() {
     }
   });
 }
+//
+function viewDepartments() {
+  db.findAllDepartmants()
+    .then(([rows]) => {
+      let departments = rows;
+      console.log("\n");
+      console.table(departments);
+    })
+    .then(() => loadMainPrompts());
+}
+
 // View all employees
 function viewEmployees() {
   db.findAllEmployees()

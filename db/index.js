@@ -15,6 +15,10 @@ class DB {
       );
   }
 
+  findAllDepartmants() {
+    return this.connection.promise().query("SELECT * from department");
+  }
+
   // Find all employees except the given employee id
   findAllPossibleManagers(employeeId) {
     return this.connection
@@ -37,4 +41,12 @@ class DB {
       .promise()
       .query("DELETE FROM employee WHERE id = ?", employeeId);
   }
+  viewEmployeesByManager() {
+    return this.connection.promise().query();
+  }
+  addEmployee() {
+    return this.connection;
+  }
 }
+
+module.exports = new DB(connection);
