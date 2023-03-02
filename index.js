@@ -97,37 +97,37 @@ function loadMainPrompts() {
         viewEmployeesByManager();
         break;
       case "ADD_EMPLOYEE":
-        // addEmployee();
+        addEmployee();
         break;
       case "REMOVE_EMPLOYEE":
         removeEmployee();
         break;
       case "UPDATE_EMPLOYEE_ROLE":
-        // updateEmployeeRole();
+        updateEmployeeRole();
         break;
       case "UPDATE_EMPLOYEE_MANAGER":
-        //  updateEmployeeManager();
+         updateEmployeeManager();
         break;
       case "VIEW_DEPARTMENTS":
         viewDepartments();
         break;
       case "ADD_DEPARTMENT":
-        // addDepartment();
+         addDepartment();
         break;
       case "REMOVE_DEPARTMENT":
-        //  removeDepartment();
+         removeDepartment();
         break;
       case "VIEW_UTILIZED_BUDGET_BY_DEPARTMENT":
-        // viewUtilizedBudgetByDepartment();
+        viewUtilizedBudgetByDepartment();
         break;
       case "VIEW_ROLES":
-        // viewRoles();
+        viewRoles();
         break;
       case "ADD_ROLE":
-        //addRole();
+        addRole();
         break;
       case "REMOVE_ROLE":
-        //removeRole();
+        removeRole();
         break;
       default:
         quit();
