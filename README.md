@@ -33,12 +33,6 @@ This application uses...
 
 ---
 
-## Website Link
-
----
-
----
-
 ## Installation
 
 💾

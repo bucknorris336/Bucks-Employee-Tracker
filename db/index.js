@@ -1,3 +1,4 @@
+// this is the connection 
 const connection = require("./connection");
 
 // Find all employees, join with roles and departments to display their roles, salaries, departments, and managers
@@ -33,6 +34,7 @@ function removeEmployee(employeeId) {
     .promise()
     .query("DELETE FROM employee WHERE id = ?;", employeeId);
 }
+// view employee by manager function
 function viewEmployeesByManager(managerId) {
   return connection
     .promise()
@@ -41,6 +43,7 @@ function viewEmployeesByManager(managerId) {
       managerId
     );
 }
+// view employee by department function
 function viewEmployeesByDepartment(departmentId) {
   return connection
     .promise()
@@ -49,43 +52,7 @@ function viewEmployeesByDepartment(departmentId) {
       departmentId
     );
 }
-// viewAllEmployeesByManager = () => {
-//   connection.query(
-//     `SELECT employee_id, first_name, last_name FROM employee ORDER BY employee_id ASC;`,
-//     (err, res) => {
-//       if (err) throw err;
-//       let managers = res.map((employee) => ({
-//         name: employee.first_name + " " + employee.last_name,
-//         value: employee.employee_id,
-//       }));
-//       inquirer
-//         .prompt([
-//           {
-//             name: "manager",
-//             type: "rawlist",
-//             message: "Which manager would you like to see the employee's of?",
-//             choices: managers,
-//           },
-//         ])
-//         .then((response) => {
-//           connection.query(
-//             `SELECT e.employee_id, e.first_name, e.last_name, role.title, department.department_name, role.salary, CONCAT(m.first_name, ' ', m.last_name) manager FROM employee m RIGHT JOIN employee e ON e.manager_id = m.employee_id JOIN role ON e.role_id = role.role_id JOIN department ON department.department_id = role.department_id WHERE e.manager_id = ${response.manager} ORDER BY e.employee_id ASC`,
-//             (err, res) => {
-//               if (err) throw err;
-//               console.table("\n", res, "\n");
-//               startApp();
-//             }
-//           );
-//         });
-//     }
-//   );
-// };
-function findAllRoles() {
-  return connection.promise().query("SELECT * from role");
-}
-// function updateEmployeeRole(employeeId, roleId) {
-//   return connection.promise().query("")
-// }
+// update employee role function
 function updateEmployeeRole(employeeId, roleId) {
   return connection
     .promise()
@@ -94,120 +61,46 @@ function updateEmployeeRole(employeeId, roleId) {
       employeeId,
     ]);
 }
-// function sum(a,b) {
-//   return (a+b)
-// }
-// sum(5,4)
+// create department function
 function createDepartment(department) {
   return connection
     .promise()
     .query("INSERT INTO department SET ?;", department);
 }
+// remove department function
 function removeDepartment(departmentId) {
   return connection
     .promise()
     .query("DELETE FROM department WHERE id = ?;", departmentId);
 }
-
+// update employee manager function
 function updateEmployeeManager(employee, manager) {
   return connection
     .promise()
-    .query(
-      "Update employee SET manager_id = ? WHERE id = ?;",
+    .query("Update employee SET manager_id = ? WHERE id = ?;", [
       manager,
-      employee
-    );
+      employee,
+    ]);
 }
-
+// create new role
 function createRole(role) {
   return connection.promise().query("INSERT INTO role SET ?;", role);
 }
-// createRole = () => {
-//   connection.query(`SELECT * FROM department;`, (err, res) => {
-//     if (err) throw err;
-//     let departments = res.map((department) => ({
-//       name: department.department_name,
-//       value: department.department_id,
-//     }));
-//     inquirer
-//       .prompt([
-//         {
-//           name: "title",
-//           type: "input",
-//           message: "What is the name of the role you want to add?",
-//         },
-//         {
-//           name: "salary",
-//           type: "input",
-//           message: "What is the salary of the role you want to add?",
-//         },
-//         {
-//           name: "deptName",
-//           type: "rawlist",
-//           message: "Which department do you want to add the new role to?",
-//           choices: departments,
-//         },
-//       ])
-//       .then((response) => {
-//         connection.query(
-//           `INSERT INTO role SET ?`,
-//           {
-//             title: response.title,
-//             salary: response.salary,
-//             department_id: response.deptName,
-//           },
-//           (err, res) => {
-//             if (err) throw err;
-//             console.log(
-//               `\n ${response.title} successfully added to database! \n`
-//             );
-//             startApp();
-//           }
-//         );
-//       });
-//   });
-// };
+// remove role
 function removeRole(roleId) {
   return connection.promise().query("DELETE FROM role WHERE id = ?;", roleId);
 }
-// removeARole = () => {
-//   connection.query(`SELECT * FROM role ORDER BY role_id ASC;`, (err, res) => {
-//     if (err) throw err;
-//     let roles = res.map((role) => ({ name: role.title, value: role.role_id }));
-//     inquirer
-//       .prompt([
-//         {
-//           name: "title",
-//           type: "rawlist",
-//           message: "Which role would you like to remove?",
-//           choices: roles,
-//         },
-//       ])
-//       .then((response) => {
-//         connection.query(
-//           `DELETE FROM role WHERE ?`,
-//           [
-//             {
-//               role_id: response.title,
-//             },
-//           ],
-//           (err, res) => {
-//             if (err) throw err;
-//             console.log(
-//               `\n Successfully removed the role from the database! \n`
-//             );
-//             startApp();
-//           }
-//         );
-//       });
-//   });
-// };
+// view the roles
 function viewRoles() {
   return connection
     .promise()
     .query(
       "SELECT role.id, role.title, department.name AS department, role.salary FROM role LEFT JOIN department ON role.department_id = department.id;"
     );
+}
+// find all roles function
+function findAllRoles() {
+  return connection.promise().query("SELECT * from role");
 }
 // function viewUtilizedBudgetByDepartment() {
 //   return connection.promise().query;
@@ -221,6 +114,7 @@ module.exports = {
   viewEmployeesByDepartment,
   createDepartment,
   findAllDepartments,
+  findAllPossibleManagers,
   createRole,
   removeRole,
   findAllRoles,
@@ -228,5 +122,4 @@ module.exports = {
   updateEmployeeRole,
   removeDepartment,
   updateEmployeeManager,
-  viewUtilizedBudgetByDepartment,
 };
