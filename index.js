@@ -90,53 +90,53 @@ function loadMainPrompts() {
       case "VIEW_EMPLOYEES":
         viewEmployees();
         break;
-      case "VIEW_EMPLOYEES_BY_DEPARTMENT":
-        viewEmployeesByDepartment();
-        break;
-      case "VIEW_EMPLOYEES_BY_MANAGER":
-        viewEmployeesByManager();
-        break;
+      // case "VIEW_EMPLOYEES_BY_DEPARTMENT":
+      //   viewEmployeesByDepartment();
+      //   break;
+      // case "VIEW_EMPLOYEES_BY_MANAGER":
+      //   viewEmployeesByManager();
+      //   break;
       case "ADD_EMPLOYEE":
         addEmployee();
         break;
-      case "REMOVE_EMPLOYEE":
-        removeEmployee();
-        break;
+      // case "REMOVE_EMPLOYEE":
+      //   removeEmployee();
+      //   break;
       case "UPDATE_EMPLOYEE_ROLE":
         updateEmployeeRole();
         break;
-      case "UPDATE_EMPLOYEE_MANAGER":
-         updateEmployeeManager();
-        break;
+      // case "UPDATE_EMPLOYEE_MANAGER":
+      //   updateEmployeeManager();
+      //   break;
       case "VIEW_DEPARTMENTS":
         viewDepartments();
         break;
       case "ADD_DEPARTMENT":
-         addDepartment();
+        addDepartment();
         break;
-      case "REMOVE_DEPARTMENT":
-         removeDepartment();
-        break;
-      case "VIEW_UTILIZED_BUDGET_BY_DEPARTMENT":
-        viewUtilizedBudgetByDepartment();
-        break;
+      // case "REMOVE_DEPARTMENT":
+      //   removeDepartment();
+      //   break;
+      // case "VIEW_UTILIZED_BUDGET_BY_DEPARTMENT":
+      //   viewUtilizedBudgetByDepartment();
+      //   break;
       case "VIEW_ROLES":
         viewRoles();
         break;
       case "ADD_ROLE":
         addRole();
         break;
-      case "REMOVE_ROLE":
-        removeRole();
-        break;
+      // case "REMOVE_ROLE":
+      //   removeRole();
+      //   break;
       default:
         quit();
     }
   });
 }
-//
+// View Departments
 function viewDepartments() {
-  db.findAllDepartmants()
+  db.findAllDepartments()
     .then(([rows]) => {
       let departments = rows;
       console.log("\n");
@@ -146,14 +146,11 @@ function viewDepartments() {
 }
 
 // View all employees
-function viewEmployees() {
-  db.findAllEmployees()
-    .then(([rows]) => {
-      let employees = rows;
-      console.log("\n");
-      console.table(employees);
-    })
-    .then(() => loadMainPrompts());
+async function viewEmployees() {
+  const [employees] = await db.findAllEmployees();
+  console.log("\n");
+  console.table(employees);
+  loadMainPrompts();
 }
 // View all employees that report to a specific manager
 function viewEmployeesByManager() {
@@ -254,7 +251,7 @@ function addEmployee() {
             choices: managerChoices,
           })
             .then((res) => {
-              let employee = {
+              const employee = {
                 manager_id: res.managerId,
                 role_id: roleId,
                 first_name: firstName,
@@ -270,4 +267,58 @@ function addEmployee() {
       });
     });
   });
+}
+// Add department
+function addDepartment() {
+  prompt([
+    {
+      type: "input",
+      name: "departmentName",
+      message: "What is the name of the Department?",
+    },
+  ]).then(async (res) => {
+    const department = {
+      name: res.departmentName,
+    };
+    await db.createDepartment(department);
+    viewDepartments();
+  });
+}
+// Ad role
+async function addRole() {
+  const [departmentsArray] = await db.findAllDepartments();
+  const choices = departmentsArray.map((department) => {
+    return { name: department.name, value: department.id };
+  });
+  prompt([
+    {
+      type: "input",
+      name: "title",
+      message: "what is the title for the role?",
+    },
+    {
+      type: "input",
+      name: "salary",
+      message: "What is the salary for the role?",
+    },
+    {
+      type: "list",
+      choices,
+      name: "department_id",
+      message: "What is the department for the role?",
+    },
+  ]).then(async ({ title, salary, department_id }) => {
+    const role = {
+      title,
+      salary,
+      department_id,
+    };
+    await db.createRole(role);
+    loadMainPrompts();
+    //viewRoles();
+  });
+}
+// update employee role
+function updateEmployeeRole() {
+  
 }
