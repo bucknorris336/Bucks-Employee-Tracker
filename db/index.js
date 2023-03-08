@@ -86,11 +86,14 @@ function findAllRoles() {
 // function updateEmployeeRole(employeeId, roleId) {
 //   return connection.promise().query("")
 // }
-updateEmployeeRole(employeeId, roleId) {
-  return connection.promise().query(
-    "UPDATE employee SET role_id = ? WHERE id = ?;");
-      //[roleId, employeeId]
-  }
+function updateEmployeeRole(employeeId, roleId) {
+  return connection
+    .promise()
+    .query("UPDATE employee SET role_id = ? WHERE id = ?;", [
+      roleId,
+      employeeId,
+    ]);
+}
 // function sum(a,b) {
 //   return (a+b)
 // }
@@ -106,8 +109,14 @@ function removeDepartment(departmentId) {
     .query("DELETE FROM department WHERE id = ?;", departmentId);
 }
 
-function updateEmployeeManager() {
-  return connection.promise().query;
+function updateEmployeeManager(employee, manager) {
+  return connection
+    .promise()
+    .query(
+      "Update employee SET manager_id = ? WHERE id = ?;",
+      manager,
+      employee
+    );
 }
 
 function createRole(role) {
