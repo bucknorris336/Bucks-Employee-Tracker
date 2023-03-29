@@ -1,4 +1,4 @@
-// this is the connection 
+// this is the connection
 const connection = require("./connection");
 
 // Find all employees, join with roles and departments to display their roles, salaries, departments, and managers
@@ -16,30 +16,28 @@ function findAllDepartments() {
 
 // Find all employees except the given employee id
 function findAllPossibleManagers(employeeId) {
-  return connection
-    .promise()
-    .query(
-      "SELECT id, first_name, last_name FROM employee WHERE id != ?;",
+  return connection.promise().query(
+      "SELECT id, first_name, last_name FROM employee WHERE id != ?",
       employeeId
     );
 }
 // Create a new employee
 function createEmployee(employee) {
-  return connection.promise().query("INSERT INTO employee SET ?;", employee);
+  return connection.promise().query("INSERT INTO employee SET ?", employee);
 }
 
 // Remove an employee with the given id
 function removeEmployee(employeeId) {
   return connection
     .promise()
-    .query("DELETE FROM employee WHERE id = ?;", employeeId);
+    .query("DELETE FROM employee WHERE id = ?", employeeId);
 }
 // view employee by manager function
 function viewEmployeesByManager(managerId) {
   return connection
     .promise()
     .query(
-      "SELECT e.id, e.first_name, e.last_name, department.department_name, role.title FROM employee LEFT JOIN role ON e.role_id = role.id LEFT JOIN department ON department.id = role.department_id WHERE manager_id = ?;",
+      "SELECT employee.id, employee.first_name, employee.last_name, department.department_name, role.title FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON department.id = role.department_id WHERE manager_id = ?",
       managerId
     );
 }
@@ -48,7 +46,7 @@ function viewEmployeesByDepartment(departmentId) {
   return connection
     .promise()
     .query(
-      "SELECT e.id, e.first_name, e.last_name, role.title FROM employee LEFT JOIN role ON e.role_id = role.id LEFT JOIN department ON department.id = role.department_id WHERE department_id = ?;",
+      "SELECT employee.id, employee.first_name, employee.last_name, role.title FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON department.id = role.department_id WHERE department_id = ?",
       departmentId
     );
 }

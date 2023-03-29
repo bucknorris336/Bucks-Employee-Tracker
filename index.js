@@ -1,6 +1,7 @@
 const { prompt } = require("inquirer");
 //const logo = require("asciiart-logo");
 const db = require("./db");
+const { listenerCount } = require("./db/connection");
 //require("console.table");
 
 init();
@@ -90,18 +91,18 @@ function loadMainPrompts() {
       case "VIEW_EMPLOYEES":
         viewEmployees();
         break;
-      // case "VIEW_EMPLOYEES_BY_DEPARTMENT":
-      //   viewEmployeesByDepartment();
-      //   break;
-      // case "VIEW_EMPLOYEES_BY_MANAGER":
-      //   viewEmployeesByManager();
-      //   break;
+      case "VIEW_EMPLOYEES_BY_DEPARTMENT":
+        viewEmployeesByDepartment();
+        break;
+      case "VIEW_EMPLOYEES_BY_MANAGER":
+        viewEmployeesByManager();
+        break;
       case "ADD_EMPLOYEE":
         addEmployee();
         break;
-      // case "REMOVE_EMPLOYEE":
-      //   removeEmployee();
-      //   break;
+      case "REMOVE_EMPLOYEE":
+        removeEmployee();
+        break;
       case "UPDATE_EMPLOYEE_ROLE":
         updateEmployeeRole();
         break;
@@ -114,9 +115,9 @@ function loadMainPrompts() {
       case "ADD_DEPARTMENT":
         addDepartment();
         break;
-      // case "REMOVE_DEPARTMENT":
-      //   removeDepartment();
-      //   break;
+      case "REMOVE_DEPARTMENT":
+        removeDepartment();
+        break;
       // case "VIEW_UTILIZED_BUDGET_BY_DEPARTMENT":
       //   viewUtilizedBudgetByDepartment();
       //   break;
@@ -126,9 +127,9 @@ function loadMainPrompts() {
       case "ADD_ROLE":
         addRole();
         break;
-      // case "REMOVE_ROLE":
-      //   removeRole();
-      //   break;
+      case "REMOVE_ROLE":
+        removeRole();
+        break;
       default:
         quit();
     }
@@ -284,6 +285,80 @@ function addDepartment() {
     viewDepartments();
   });
 }
+// Remove Department
+function removeDepartment() {
+  console.log("removeDepartment");
+  db.findAllDepartments().then(([rows]) => {
+    let roles = rows;
+    const departmentChoices = roles.map(({ id, title }) => ({
+      name: title,
+      value: id,
+    }));
+    prompt({
+      type: "list",
+      name: "departmentId",
+      message: "Which Department do you want to remove?",
+      choices: departmentChoices,
+    })
+      .then((response) => db.removeDepartment(response.departmentId))
+      .then(console.log("Removed department from database"))
+
+      .then(() => loadMainPrompts());
+  });
+}
+
+// View employee by Manager
+function viewEmployeesByManager() {
+  db.findAllPossibleManagers().then(([rows]) => {
+    let managers = rows;
+    const managerChoices = managers.map(({ id, first_name, last_name }) => ({
+      name: `${first_name} ${last_name}`,
+      value: id,
+    }));
+    prompt({
+      type: "list",
+      name: "managerId",
+      message: "which Manager would you like to see Employees for?",
+      choices: managerChoices,
+    })
+      .then((response) => db.viewEmployeesByManager(response.managerId))
+      .then(([rows]) => {
+        let employee = rows;
+        console.log("\n");
+        if (employee.length === 0) {
+          console.log("This Manager has no direct reports.");
+        } else {
+          console.table(employee);
+        }
+      })
+      .then(() => loadMainPrompts());
+  });
+}
+// View employees by Department
+function viewEmployeesByDepartment() {
+  db.findAllDepartments().then(([rows]) => {
+    let departments = rows;
+    const departmentChoices = departments.map(({ id, name }) => ({
+      name: name,
+      value: id,
+    }));
+
+    prompt({
+      type: "list",
+      name: "departmentId",
+      message: "which department would you like to see Employees for?",
+      choices: departmentChoices,
+    })
+      .then((response) => db.viewEmployeesByDepartment(response.departmentId))
+      .then(([rows]) => {
+        let employees = rows;
+        console.log("\n");
+        console.table(employees);
+      })
+      .then(() => loadMainPrompts());
+  });
+}
+
 // Ad role
 async function addRole() {
   const [departmentsArray] = await db.findAllDepartments();
@@ -315,10 +390,36 @@ async function addRole() {
     };
     await db.createRole(role);
     loadMainPrompts();
-    //viewRoles();
   });
 }
 // update employee role
-function updateEmployeeRole() {
-  
+function updateEmployeeRole() {}
+
+// remove Role
+function removeRole() {
+  console.log("removeRole");
+  db.findAllRoles().then(([rows]) => {
+    let roles = rows;
+    const roleChoices = roles.map(({ id, title }) => ({
+      name: title,
+      value: id,
+    }));
+    prompt({
+      type: "list",
+      name: "roleId",
+      message: "Which role do you want to remove?",
+      choices: roleChoices,
+    })
+      .then((response) => db.removeRole(response.roleId))
+      .then(console.log("removed role from db"))
+
+      .then(() => loadMainPrompts());
+  });
+}
+// View Roles
+async function viewRoles() {
+  const [roles] = await db.findAllRoles();
+  console.log("\n");
+  console.table(roles);
+  loadMainPrompts();
 }
