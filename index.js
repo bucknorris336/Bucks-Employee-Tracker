@@ -106,9 +106,9 @@ function loadMainPrompts() {
       case "UPDATE_EMPLOYEE_ROLE":
         updateEmployeeRole();
         break;
-      // case "UPDATE_EMPLOYEE_MANAGER":
-      //   updateEmployeeManager();
-      //   break;
+      case "UPDATE_EMPLOYEE_MANAGER":
+        updateEmployeeManager();
+        break;
       case "VIEW_DEPARTMENTS":
         viewDepartments();
         break;
@@ -334,6 +334,48 @@ function viewEmployeesByManager() {
       .then(() => loadMainPrompts());
   });
 }
+// Update Employee Manager 
+function updateEmployeeManager() {
+  db.findAllEmployees().then(([rows]) => {
+    let employees = rows;
+    const employeeChoices = employees.map(({ id, first_name, last_name }) => ({
+      name: `${first_name} ${last_name}`,
+      value: id,
+    }));
+    db.findAllPossibleManagers().then(([rows]) => {
+      let managers = rows;
+      const managerChoices = managers.map(({ id, first_name, last_name }) => ({
+        name: `${first_name} ${last_name}`,
+        value: id,
+      }));
+
+      prompt([
+        {
+          type: "list",
+          name: "employeeId",
+          message: "which Employee would you like to update?",
+          choices: employeeChoices,
+        },
+        {
+          type: "list",
+          name: "managerId",
+          message: "Which Manager would you like to assign to the employee?",
+          choices: managerChoices,
+        },
+      ])
+        .then(({ employeeId, managerId }) =>
+          db.updateEmployeeManager(employeeId, managerId)
+        )
+        .then(([rows]) => {
+          let employees = rows;
+          console.log("\n");
+          console.table(employees);
+        })
+        .then(() => loadMainPrompts());
+    });
+  });
+}
+
 // View employees by Department
 function viewEmployeesByDepartment() {
   db.findAllDepartments().then(([rows]) => {

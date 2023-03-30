@@ -16,7 +16,9 @@ function findAllDepartments() {
 
 // Find all employees except the given employee id
 function findAllPossibleManagers(employeeId) {
-  return connection.promise().query(
+  return connection
+    .promise()
+    .query(
       "SELECT id, first_name, last_name FROM employee WHERE id != ?",
       employeeId
     );
@@ -56,6 +58,15 @@ function updateEmployeeRole(employeeId, roleId) {
     .promise()
     .query("UPDATE employee SET role_id = ? WHERE id = ?;", [
       roleId,
+      employeeId,
+    ]);
+}
+// update employee manager
+function updateEmployeeManager(employeeId, managerId) {
+  return connection
+    .promise()
+    .query("UPDATE employee SET manager_id = ? WHERE id = ?;", [
+      managerId,
       employeeId,
     ]);
 }
