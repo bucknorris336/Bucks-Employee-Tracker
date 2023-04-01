@@ -39,7 +39,7 @@ function viewEmployeesByManager(managerId) {
   return connection
     .promise()
     .query(
-      "SELECT employee.id, employee.first_name, employee.last_name, department.department_name, role.title FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON department.id = role.department_id WHERE manager_id = ?",
+      "SELECT employee.id, employee.first_name, employee.last_name, department.name, role.title FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON department.id = role.department_id WHERE manager_id = ?",
       managerId
     );
 }
@@ -111,9 +111,6 @@ function viewRoles() {
 function findAllRoles() {
   return connection.promise().query("SELECT * from role");
 }
-// function viewUtilizedBudgetByDepartment() {
-//   return connection.promise().query;
-// }
 
 module.exports = {
   createEmployee,
