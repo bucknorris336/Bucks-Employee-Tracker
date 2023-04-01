@@ -448,18 +448,14 @@ function updateEmployeeRole() {
       },
     ]).then((response) => {
       db.findAllRoles(response.employeeId).then(([rows]) => {
-        let roles = rows:
-        const roleChoices = roles.map(
-          ({ title, salary, department_id,
-          })
-        )
-    prompt(
-    {
-      type: "input",
-      name: "title",
-      message: "what is the updated title for the role?",
-      choices: roleChoices
-      },
+        let roles = rows;
+        const roleChoices = roles.map({ title, salary, department_id });
+        prompt({
+          type: "input",
+          name: "title",
+          message: "what is the updated title for the role?",
+          choices: roleChoices,
+        })
           .then(({ employeeId, roleId }) =>
             db.updateEmployeeRole(employeeId, roleId)
           )
@@ -469,14 +465,16 @@ function updateEmployeeRole() {
             console.table(employees);
           })
           .then(() => loadMainPrompts());
-      })
-    })
+      });
+    });
     // .then(async ({ title, salary, department_id }) => {
     // const role = {
     //   title,
     //   salary,
     //   department_id,
     // };
+  });
+}
 
 // remove Role
 function removeRole() {
