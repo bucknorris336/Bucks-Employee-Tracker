@@ -25,18 +25,19 @@ The database was initialized in MySQL Workbench after the schema files were set 
 
 ## Walkthrough Video
 
+Check out a short video walkthrough
+📽️ [Click Here](https://drive.google.com/file/d/1EODvErSXtGg2zp85xFo4tr-uqjiZkzAO/view?usp=sharing)
+
 ---
 
 ## Features
 
 - Node.js
+- mySQL2
 - Inquirer
-- MySQL
----
-* mySQL2
-* Inquirer
-* environmental variables
-* databases called through terminal/command-line
+- environmental variables
+- databases called through terminal/command-line
+
 ---
 
 ## Installation
@@ -47,14 +48,13 @@ Install dependencies with npm
 
 In the command line run `npm install`
 
-
 To run this project, you will need to add the following environment variables to your .env file
 
 MYSQL_HOST: '127.0.0.1' || localhost (whatever works for you!)
 
 MYSQL_USER: 'root'
 
-MYSQL_PASSWORD: 'yourpassword here'
+MYSQL_PASSWORD: 'your password here'
 
 MYSQL_DATABASE: 'name of database being used'
 
@@ -64,10 +64,7 @@ MYSQL_DATABASE: 'name of database being used'
 
 💻
 
-Type `npm run start` in the command line
-
-
-
+Type `npm run start` in the command line to start the app
 
 ---
 

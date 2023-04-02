@@ -212,6 +212,7 @@ function addEmployee() {
     let firstName = res.first_name;
     let lastName = res.last_name;
 
+    // find all roles
     db.findAllRoles().then(([rows]) => {
       let roles = rows;
       const roleChoices = roles.map(({ id, title }) => ({
@@ -449,7 +450,10 @@ function updateEmployeeRole() {
     ]).then((response) => {
       db.findAllRoles(response.employeeId).then(([rows]) => {
         let roles = rows;
-        const roleChoices = roles.map({ title, salary, department_id });
+        const roleChoices = roles.map(({ title, salary, department_id }) => ({
+          name: `${title} ${salary}`,
+          value: department_id,
+        }));
         prompt({
           type: "input",
           name: "title",
